@@ -1,0 +1,144 @@
+from turtle import *
+from turtle import Screen
+import random
+import math
+
+screen = Screen()
+
+shape("turtle")
+speed(0)
+radians()
+colormode(255)
+screensize(1266,668)
+bgcolor(0,0,0)
+
+#below are functions that help with other functions
+
+def teleport(x,y): #moves turtle to location w/o line/marks & resets direction
+    penup()
+    setpos(x,y)
+    seth(0)
+    pendown()
+
+def colorfix(r,g,b,move): #tells colors to change/stay same
+    if (r == "change"):
+        r = move
+
+    if (g == "change"):
+        g = move
+
+    if (b == "change"):
+        b = move
+
+    return(r,g,b)
+        
+def gradient(x,y,height,width,r,g,b): #draws gradient rectangles
+    ("x and y are used for positions"
+     "height and width are used for the size of the finished image"
+     "r, g, and b are for colors; the 'change' value means it changes w/ moves")
+    teleport(x,y)
+    move = 255
+    move0 = move
+
+    while move >= 0:
+        color(colorfix(r,g,b,move))
+        
+        begin_fill()
+        forward(width/move0)
+        left(1.5708)
+        forward(height)
+        left(1.5708)
+        forward(width/move0)
+        left(1.5708)
+
+        forward(height)
+        left(1.5708)
+        forward(width/move0)
+        end_fill()
+
+        move = move - 1
+        
+    teleport(0,0)
+
+def stars():
+    color(255,255,255)
+    for x in range(0,5):
+        teleport(random.randint(100,900),random.randint(-225,445))
+        
+        dot(4)
+
+    teleport(0,0)
+
+def tree(branchLen): #creates a tree through recursion
+    if branchLen > 5:
+        forward(branchLen)
+        right(0.349066)
+        tree(branchLen-15)
+        left(0.698132)
+        tree(branchLen-15)
+        right(0.349066)
+        backward(branchLen)
+ 
+#below are the parts to the full picture, unless not used
+
+def draw_tree(x,y,branch): #draws tree in image
+    pensize(5)
+    teleport(x,y)
+    color(30,30,30)
+    left(1.5708)
+    tree(branch)
+    teleport(0,0)
+
+def draw_grass(): #draws "grass" in gradient
+    gradient(-800,-450,200,1600,0,"change",25)
+
+def sun():
+    i = 0
+
+    begin_fill()
+    teleport(-775,275)
+    color(220,220,0)
+
+    while(i<36):
+       forward(300);
+       right(2.96706);
+       i = i+1
+
+    end_fill()
+
+def moon():
+    teleport(650,275)
+    color(255,255,255)
+
+    i = 210
+
+    dot(200)
+
+def draw_dark_light(): #draws "day and night" sky background in gradient
+    gradient(-800,-450,900,1600,"change","change",255//2)
+
+def arcenciel(): #il ecrit les couleurs de l'arcenciel, not used
+    #gradient(-800,-450,900,1600,"change",0,0)        ("rouge")
+    #gradient(-800,-450,900,1600,"change",120,0)      ("orange")
+    #gradient(-800,-450,90,1600,"change","change"0)  ("jaune")
+    #gradient(-800,-450,900,1600,0,"change",0)      ("vert")
+    gradient(-800,-450,900,1600,0,0,"change")      ("bleu")
+    #gradient(-800,-450,900,1600,"change",0,"change") ("violet")
+
+begin = input("Ready?: ")
+
+if (begin == "y"): #I did this conditional to record it more easily in OBS.
+    draw_dark_light()
+    draw_grass()
+    draw_tree(0,-250,125)
+    sun()
+    moon()
+
+    for x in range(1,25):
+        stars()
+
+    screen.listen()
+    screen.onkey(stars,"space")
+
+
+    exitonclick()
